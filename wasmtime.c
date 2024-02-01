@@ -63,7 +63,7 @@ libwasmtime_exec (void *handle, const char *pathname, char *const argv[])
     void (*wasmtime_error_message) (const wasmtime_error_t *error, wasm_name_t *message);
     void (*wasmtime_error_delete) (wasmtime_error_t * error);
     bool (*wasi_config_preopen_dir) (wasi_config_t * config, const char *path, const char *guest_path);
-    bool (*wasi_config_preopen_socket) (wasi_config_t * config, const char *host_port);
+    bool (*wasi_config_preopen_socket) (wasi_config_t * config, uint32_t fd_num, const char *host_port);
 
     wasm_engine_new = dlsym (handle, "wasm_engine_new");
     wasm_engine_delete = dlsym (handle, "wasm_engine_delete");
@@ -159,7 +159,7 @@ libwasmtime_exec (void *handle, const char *pathname, char *const argv[])
     wasi_config_inherit_stdout (wasi_config);
     wasi_config_inherit_stderr (wasi_config);
     wasi_config_preopen_dir (wasi_config, ".", ".");
-    wasi_config_preopen_socket (wasi_config, "127.0.0.1:8081");
+    wasi_config_preopen_socket (wasi_config, 5, "127.0.0.1:8082");
     wasm_trap_t *trap = NULL;
     err = wasmtime_context_set_wasi (context, wasi_config);
     if (err != NULL)
